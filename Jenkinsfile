@@ -11,8 +11,7 @@ pipeline {
 
     stages{
         stage('Build'){
-            steps {
-                echo "${params.Version}"
+            steps {                
                 sh 'mvn clean package'
             }
             post {
@@ -25,6 +24,7 @@ pipeline {
 
         stage('Test'){
             steps {
+                echo "${params.Version}"
                 echo 'Sample Test...'
             }
         }
