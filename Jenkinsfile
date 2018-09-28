@@ -17,6 +17,12 @@ pipeline {
                 }
             }
         }
+
+        stage('Test'{
+            steps {
+                echo 'Sample Test...'
+            }
+        })
         stage('Deploy to Staging'){
             steps {
                 build job: 'deploy-to-staging'
