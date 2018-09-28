@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    parameters {
+        string(name: 'Version', defaultValue: '1.0', description: 'Input build version')
+    }
+
     tools {
         maven 'localMaven'
     }
@@ -8,6 +12,7 @@ pipeline {
     stages{
         stage('Build'){
             steps {
+                echo "${params.Version}"
                 sh 'mvn clean package'
             }
             post {
@@ -23,6 +28,7 @@ pipeline {
                 echo 'Sample Test...'
             }
         }
+        
         stage('Deploy to Staging'){
             steps {
                 build job: 'deploy-to-staging'
