@@ -2,16 +2,17 @@ pipeline {
     agent any
 
     parameters {
-        string(name: 'Version', defaultValue: '1.0', description: 'Input build version')
+         string(name: 'tomcat_dev', defaultValue: 'localhost', description: 'Staging Server')
+         string(name: 'tomcat_prod', defaultValue: 'localhost', description: 'Production Server')
     }
 
-    tools {
-        maven 'localMaven'
-    }
+    triggers {
+         pollSCM('* * * * *')
+     }
 
-    stages{
+stages{
         stage('Build'){
-            steps {                
+            steps {
                 sh 'mvn clean package'
             }
             post {
@@ -22,33 +23,18 @@ pipeline {
             }
         }
 
-        stage('Test'){
-            steps {
-                echo "${params.Version}"
-                echo 'Sample Test...'
-            }
-        }
-        
-        stage('Deploy to Staging'){
-            steps {
-                build job: 'deploy-to-staging'
-            }
-        }
-
-        stage ('Deploy to Production'){
-            steps {
-                timeout(time:5, unit: 'DAYS'){
-                    input message: 'Approve PRODUCTION Deployment?'
-                }
-                build job: 'deploy-to-prod'
-            }
-            post {
-                success {
-                    echo 'Code deployed to Production.'
+        stage ('Deployments'){
+            parallel{
+                stage ('Deploy to Staging'){
+                    steps {
+                        sh "cp **/target/*.war /Users/clakshma/Documents/Chethana/downloads/apache-tomcat-8.5.34-staging/webapps"
+                    }
                 }
 
-                failure {
-                    echo 'Deployment failed.'
+                stage ("Deploy to Production"){
+                    steps {
+                        sh "cp **/target/*.war /Users/clakshma/Documents/Chethana/downloads/apache-tomcat-8.5.34-prod/webapps"
+                    }
                 }
             }
         }
