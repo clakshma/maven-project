@@ -31,13 +31,13 @@ stages{
             parallel{
                 stage ('Deploy to Staging'){
                     steps {
-                        sh "echo '' | sudo -S cp -rf **/target/*.war /Users/clakshma/Documents/Chethana/downloads/apache-tomcat-8.5.34-staging/webapps"
+                        sh "cp -rf **/target/*.war /Users/clakshma/Documents/Chethana/downloads/apache-tomcat-8.5.34-staging/webapps"
                     }
                 }
 
                 stage ("Deploy to Production"){
                     steps {
-                        sh "echo '' | sudo -S cp -rf **/target/*.war /Users/clakshma/Documents/Chethana/downloads/apache-tomcat-8.5.34-prod/webapps"
+                        sh "cp -rf **/target/*.war /Users/clakshma/Documents/Chethana/downloads/apache-tomcat-8.5.34-prod/webapps"
                     }
                 }
             }
